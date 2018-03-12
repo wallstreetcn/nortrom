@@ -1,0 +1,61 @@
+group 'com.wallstreetcn.flume'
+version '0.1'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+
+ext {
+    flumeVersion = '1.8.0'
+}
+
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+
+    dependencies {
+        classpath group: 'com.alibaba', name: 'fastjson', version: '1.2.46'
+        classpath group: 'org.jooq', name: 'jooq', version: '3.10.5'
+        classpath group: 'org.apache.flume', name: 'flume-ng-sdk', version: '1.8.0'
+        classpath group: 'org.apache.flume', name: 'flume-ng-core', version: '1.8.0'
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'idea'
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+dependencies {
+    compile group: 'com.alibaba', name: 'fastjson', version: '1.2.46'
+    compile group: 'org.jooq', name: 'jooq', version: '3.10.5'
+    compile group: 'org.apache.flume', name: 'flume-ng-sdk', version: '1.8.0'
+    compile group: 'org.apache.flume', name: 'flume-ng-core', version: '1.8.0'
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.3'
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/main/java']
+        }
+        resources {
+            srcDir 'src/main/resources'
+        }
+    }
+}
+
+compileJava.source sourceSets.main.java
+
+jar {
+    baseName = 'wallstreetcn-jdbc-sink'
+    version = '0.0.1'
+}
