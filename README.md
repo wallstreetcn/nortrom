@@ -22,7 +22,7 @@ as JSON, and construct an insertion SQL `INSERT INTO test(field1, field2) VALUES
     agent1.sinks.k1.type = com.wallstreetcn.flume.JDBCSink
     agent1.sinks.k1.driver = com.mysql.jdbc.Driver
     agent1.sinks.k1.connectionURL = jdbc:mysql://mysql-address/test
-    agent1.sinks.k1.mapping = field1:body.app_id,field2:header.field2
+    agent1.sinks.k1.mapping = field1:body.field1,field2:header.field2
     agent1.sinks.k1.user = root
     agent1.sinks.k1.password = root
     agent1.sinks.k1.table = test
