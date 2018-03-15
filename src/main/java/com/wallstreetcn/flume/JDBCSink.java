@@ -138,7 +138,7 @@ public class JDBCSink extends AbstractSink implements Configurable {
                 events.add(event);
             }
 
-            LOG.debug("start to batch " + events.size() + " events.");
+            LOG.debug("Started to batch " + events.size() + " events.");
 
             Batch batch = dslContext.batch(MappingQuery.render(
                     this.dslContext,
@@ -153,23 +153,37 @@ public class JDBCSink extends AbstractSink implements Configurable {
             txn.commit();
 
             counter.addToEventDrainSuccessCount(count);
-            LOG.info("success to batch " + events.size() + " events.");
+            LOG.info("Success to batch " + events.size() + " events.");
         } catch (DataAccessException | SQLException e) {
-            LOG.error("fail to insert into database", e);
-            status = Status.BACKOFF;
+            String errorMsg = "Failed to publish events";
+            LOG.error("Failed to insert into database", e);
             counter.incrementConnectionClosedCount();
 
             try {
                 connection.rollback();
             } catch (SQLException e1) {
-                LOG.error("fail to rollback", e1);
+                LOG.error("Failed to rollback", e1);
             } finally {
                 txn.rollback();
             }
+            throw new EventDeliveryException(errorMsg, e);
         } finally {
             txn.close();
         }
 
         return status;
+    }
+
+    @Override
+    public synchronized void start() {
+        counter.start();
+        super.start();
+    }
+
+    @Override
+    public synchronized void stop() {
+        counter.stop();
+        LOG.info("JDBC Sink {} stopped. Metrics: {}", getName(), counter);
+        super.stop();
     }
 }
