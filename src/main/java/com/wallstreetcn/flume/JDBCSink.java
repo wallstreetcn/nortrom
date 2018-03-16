@@ -139,6 +139,7 @@ public class JDBCSink extends AbstractSink implements Configurable {
             }
 
             LOG.debug("Started to batch " + events.size() + " events.");
+            counter.addToEventDrainAttemptCount(count);
 
             Batch batch = dslContext.batch(MappingQuery.render(
                     this.dslContext,
